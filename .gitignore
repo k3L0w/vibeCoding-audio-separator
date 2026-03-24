@@ -1,6 +1,25 @@
+# --- Ambiente e Dependências ---
 venv/
+.env
 __pycache__/
-*.mp3
-*.wav
-backend/output/
-backend/input/
+*.py[cod]
+
+# --- Modelos de IA (PESADOS - NÃO SUBIR) ---
+# Ignora a pasta onde o Spleeter baixa os modelos pré-treinados
+pretrained_models/
+model_storage/
+*.tar.gz
+
+# --- Dados do Projeto (PRIVADOS) ---
+# Ignora apenas o conteúdo das pastas de áudio, mas mantém as pastas no Git
+# (Isso evita que suas músicas pessoais subam para o GitHub)
+backend/input/*
+!backend/input/.gitkeep
+backend/output/*
+!backend/output/.gitkeep
+
+# --- IDE e Sistema ---
+.vscode/
+.idea/
+.DS_Store
+*.log

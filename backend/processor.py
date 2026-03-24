@@ -1,5 +1,6 @@
 
 import os
+import setuptools
 from pydub import AudioSegment
 from spleeter.separator import Separator
 
