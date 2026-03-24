@@ -2,45 +2,42 @@ import os
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-import numpy as prosperity
+import numpy as np # Corrigido de 'prosperity'
 
-def visualize_5_stems(song_name, output_folder="backend/output"):
+def visualize_demucs_stems(song_name, output_folder="backend/output"):
     """
-    Gera espectrogramas para as 5 trilhas separadas (MP3).
+    Gera espectrogramas para as trilhas separadas pelo Demucs.
     """
-    song_path = os.path.join(output_folder, song_name)
-    stems = ['vocals', 'drums', 'bass', 'piano', 'other']
+    # O Demucs cria uma pasta com o nome do modelo (htdemucs) antes da pasta da música
+    song_path = os.path.join(output_folder, "htdemucs", song_name)
+    stems = ['vocals', 'drums', 'bass', 'other']
     
     plt.figure(figsize=(15, 10))
-    plt.suptitle(f"Análise de Frequência: {song_name}", fontsize=16)
+    plt.suptitle(f"VibeCoding - Análise de Frequência (Demucs): {song_name}", fontsize=16, color='#00f2ff')
 
     for i, stem in enumerate(stems):
         file_path = os.path.join(song_path, f"{stem}.mp3")
         
         if os.path.exists(file_path):
-            # Carrega o MP3 usando librosa
             y, sr = librosa.load(file_path, sr=None)
             S = librosa.feature.melspectrogram(y=y, sr=sr)
-            S_dB = librosa.power_to_db(S, ref=prosperity.max)
+            S_dB = librosa.power_to_db(S, ref=np.max) # Corrigido aqui
 
-            # Plota no grid (3 linhas, 2 colunas)
-            plt.subplot(3, 2, i+1)
+            plt.subplot(2, 2, i+1)
             librosa.display.specshow(S_dB, x_axis='time', y_axis='mel', sr=sr)
             plt.colorbar(format='%+2.0f dB')
-            plt.title(f"Trilha: {stem.capitalize()}")
+            plt.title(f"Trilha: {stem.capitalize()}", color='white')
         else:
             print(f"⚠️ Aviso: Arquivo {stem}.mp3 não encontrado em {song_path}")
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.gcf().set_facecolor('#0f0f13')
     
-    # Salva a imagem de comparação
     viz_output = os.path.join(song_path, "spectrogram_comparison.png")
     plt.savefig(viz_output)
     print(f"📊 Visualização gerada com sucesso em: {viz_output}")
     plt.show()
 
 if __name__ == "__main__":
-    # Altere aqui para o nome da pasta da música que você acabou de processar
-    # Exemplo: se processou 'fhop.mp3', a pasta será 'fhop'
-    nome_da_musica = "fhop" 
-    visualize_5_stems(nome_da_musica)
+    # Coloque aqui o nome do ficheiro que processou (sem o .mp3)
+    visualize_demucs_stems("Indesculpavel(Ao-Vivo)fhop")
