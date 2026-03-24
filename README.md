@@ -4,7 +4,7 @@
 [![OS](https://img.shields.io/badge/OS-Ubuntu%20Studio%2024.04-orange.svg)](https://ubuntustudio.org/)
 [![Engine](https://img.shields.io/badge/Engine-Demucs-blueviolet.svg)](https://github.com/facebookresearch/demucs)
 
-O **VibeCoding** é um motor de separação de áudio de alta fidelidade projetado para isolar instrumentos com precisão profissional. Utilizando inteligência artificial de ponta, o sistema transforma arquivos estéreo em trilhas individuais (stems), sendo uma alternativa robusta e local para músicos e produtores.
+O **vibeCoding-audio-separator** é um motor de separação de áudio de alta fidelidade projetado para isolar instrumentos com precisão profissional. Utilizando inteligência artificial de ponta, o sistema transforma arquivos estéreo em trilhas individuais (stems), sendo uma alternativa robusta e local para músicos e produtores.
 
 ---
 
