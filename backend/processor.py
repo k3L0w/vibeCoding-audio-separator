@@ -1,38 +1,47 @@
-
 import os
-import setuptools
 from pydub import AudioSegment
 from spleeter.separator import Separator
 
-def separate_stems(mp3_filepath, output_folder="output"):
-    """
-    Separates vocals and accompaniment from an MP3 file using Spleeter.
+def convert_to_mp3(source_file):
+    """Converte um arquivo wav para mp3 e remove o original."""
+    target_file = source_file.replace(".wav", ".mp3")
+    audio = AudioSegment.from_wav(source_file)
+    audio.export(target_file, format="mp3", bitrate="192k")
+    os.remove(source_file) # Remove o wav para economizar espaço
+    return target_file
 
-    Args:
-        mp3_filepath (str): The path to the input MP3 file.
-        output_folder (str): The folder where the separated stems will be saved.
-    """
+def separate_stems_5_mp3(mp3_filepath, output_folder="backend/output"):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    # Initialize Spleeter separator with 2 stems (vocals and accompaniment)
-    separator = Separator("spleeter:2stems")
-
-    # Separate the audio and save the results
+    # Inicializa o separador para 5 trilhas
+    separator = Separator("spleeter:5stems")
+    
+    print(f"🎸 Iniciando separação (5 stems) de: {os.path.basename(mp3_filepath)}")
+    
+    # O Spleeter separa e salva como .wav inicialmente
     separator.separate_to_file(mp3_filepath, output_folder)
-
-    print(f"Stems separated and saved to {output_folder}")
+    
+    # Localiza a pasta criada pelo Spleeter (geralmente o nome do arquivo)
+    song_name = os.path.splitext(os.path.basename(mp3_filepath))[0]
+    song_folder = os.path.join(output_folder, song_name)
+    
+    print(f"📦 Convertendo trilhas para MP3...")
+    for file in os.listdir(song_folder):
+        if file.endswith(".wav"):
+            full_path = os.path.join(song_folder, file)
+            convert_to_mp3(full_path)
+            
+    print(f"✅ Processo concluído! Arquivos MP3 salvos em: {song_folder}")
 
 if __name__ == "__main__":
-    # Example usage (replace with your actual MP3 file path)
     input_folder = "backend/input"
     output_folder = "backend/output"
-    # Assuming there's only one MP3 file in the input folder for this example
+    
     mp3_files = [f for f in os.listdir(input_folder) if f.endswith(".mp3")]
 
     if mp3_files:
         mp3_filepath = os.path.join(input_folder, mp3_files[0])
-        separate_stems(mp3_filepath, output_folder)
-        print(f"Stems separated and saved to {output_folder}")
+        separate_stems_5_mp3(mp3_filepath, output_folder)
     else:
-        print(f"No MP3 files found in {input_folder}")
+        print(f"❌ Nenhum arquivo MP3 encontrado em {input_folder}")
