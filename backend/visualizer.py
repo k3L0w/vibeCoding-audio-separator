@@ -8,7 +8,7 @@ def visualize_demucs_stems(song_name, output_folder="backend/output"):
     """
     Gera espectrogramas para as trilhas separadas pelo Demucs.
     """
-    # O Demucs cria uma pasta com o nome do modelo (htdemucs) antes da pasta da música
+    # O Demucs cria uma pasta com o nome do modelo (htdemucs) antes da pasta da música, isso é perfeito!
     song_path = os.path.join(output_folder, "htdemucs", song_name)
     stems = ['vocals', 'drums', 'bass', 'other']
     
