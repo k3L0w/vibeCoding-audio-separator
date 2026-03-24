@@ -10,50 +10,51 @@ ctk.set_default_color_theme("blue")
 class VibeCodingApp(ctk.CTk):
     def __init__(self):
         super().__init__()
+        self.title("VibeCoding - Multi-Engine Audio Separator")
+        self.geometry("600x500")
 
-        self.title("VibeCoding - Audio Separator Pro")
-        self.geometry("600x450")
+        self.label = ctk.CTkLabel(self, text="Escolha o Motor de Separação", font=("Arial", 18, "bold"))
+        self.label.pack(pady=15)
 
-        # Rótulo principal
-        self.label = ctk.CTkLabel(self, text="VibeCoding: Separador de 5 Instrumentos", font=("Arial", 18, "bold"))
-        self.label.pack(pady=20)
+        # SELETOR DE MOTOR
+        self.engine_mode = ctk.CTkSegmentedButton(self, values=["Spleeter (Rápido)", "Demucs (Qualidade)"], command=self.update_mode_text)
+        self.engine_mode.set("Spleeter (Rápido)")
+        self.engine_mode.pack(pady=10)
 
-        # Botão de seleção
-        self.select_button = ctk.CTkButton(self, text="Selecionar MP3 e Iniciar", command=self.select_file, height=45, fg_color="#1f538d")
-        self.select_button.pack(pady=10)
+        self.info_label = ctk.CTkLabel(self, text="Ideal para rascunhos rápidos (2-3 min)", text_color="gray")
+        self.info_label.pack(pady=5)
 
-        # BARRA DE PROGRESSO
+        self.select_button = ctk.CTkButton(self, text="Selecionar MP3 e Iniciar", command=self.select_file, height=45)
+        self.select_button.pack(pady=20)
+
         self.progress_bar = ctk.CTkProgressBar(self, width=400)
         self.progress_bar.set(0)
-        self.progress_bar.pack(pady=20)
+        self.progress_bar.pack(pady=10)
 
-        # Status
-        self.status_label = ctk.CTkLabel(self, text="Status: Pronto para processar", text_color="gray")
-        self.status_label.pack(pady=5)
+        self.status_label = ctk.CTkLabel(self, text="Status: Pronto", text_color="gray")
+        self.status_label.pack(pady=10)
 
-        # BOTÕES DE AÇÃO (Escondidos inicialmente)
-        self.button_frame = ctk.CTkFrame(self, fg_color="transparent")
-        self.button_frame.pack(pady=10)
-
-        self.view_button = ctk.CTkButton(self.button_frame, text="Ver Gráficos", command=self.open_visualizer, fg_color="green", hover_color="#050")
-        self.folder_button = ctk.CTkButton(self.button_frame, text="Abrir Pasta de MP3", command=self.open_output_folder, fg_color="#d35400", hover_color="#a04000")
+        self.folder_button = ctk.CTkButton(self, text="Abrir Pasta de Saída", command=self.open_output_folder, fg_color="#d35400")
         
         self.selected_path = ""
         self.song_name = ""
+
+    def update_mode_text(self, value):
+        if "Spleeter" in value:
+            self.info_label.configure(text="Ideal para rascunhos rápidos (2-3 min)")
+        else:
+            self.info_label.configure(text="Alta fidelidade para Guitarras (8-12 min)")
 
     def select_file(self):
         self.selected_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.mp3")])
         if self.selected_path:
             self.song_name = os.path.splitext(os.path.basename(self.selected_path))[0]
-            self.label.configure(text=f"Música: {self.song_name}")
             self.start_processing()
 
     def start_processing(self):
-        self.status_label.configure(text="Status: IA trabalhando no i5...", text_color="yellow")
+        self.status_label.configure(text="Processando... Prepare o café! ☕", text_color="yellow")
         self.select_button.configure(state="disabled")
-        self.view_button.pack_forget()
         self.folder_button.pack_forget()
-        
         self.progress_bar.configure(mode="indeterminate")
         self.progress_bar.start()
         
@@ -62,38 +63,46 @@ class VibeCodingApp(ctk.CTk):
 
     def run_engine(self):
         try:
-            # Executa o processador atualizado
-            result = subprocess.run(["python3", "backend/processor.py"], capture_output=True, text=True)
-            
-            self.after(0, self.stop_progress)
+            mode = self.engine_mode.get()
+            output_dir = os.path.abspath("backend/output")
 
-            if result.returncode == 0:
-                self.status_label.configure(text="✅ Concluído! Arquivos prontos.", text_color="green")
-                self.view_button.pack(side="left", padx=10) 
-                self.folder_button.pack(side="left", padx=10)
+            if "Demucs" in mode:
+                # Chama o Python do ambiente isolado venv_demucs
+                python_env = os.path.abspath("venv_demucs/bin/python3")
+                command = [python_env, "-m", "demucs", "--mp3", "-o", output_dir, self.selected_path]
+
+                # O modelo htdemucs_6s separa: vocals, drums, bass, other, guitar, piano
+                command = [
+                    python_env, "-m", "demucs", 
+                    "--mp3", 
+                    "-n", "htdemucs_6s", 
+                    "-o", output_dir, 
+                    self.selected_path
+                ]
             else:
-                self.status_label.configure(text="❌ Erro no Spleeter.", text_color="red")
-        except Exception as e:
-            self.status_label.configure(text=f"Erro: {str(e)}", text_color="red")
-        finally:
-            self.select_button.configure(state="normal")
+                # Chama o backend original no ambiente padrão
+                command = ["python3", "backend/processor.py"]
 
-    def stop_progress(self):
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.after(0, self.finish_ui, result.returncode)
+        except Exception as e:
+            self.after(0, lambda: self.status_label.configure(text=f"Erro: {str(e)}", text_color="red"))
+
+    def finish_ui(self, returncode):
         self.progress_bar.stop()
         self.progress_bar.configure(mode="determinate")
         self.progress_bar.set(1)
-
-    def open_visualizer(self):
-        subprocess.Popen(["python3", "backend/visualizer.py"])
+        self.select_button.configure(state="normal")
+        if returncode == 0:
+            self.status_label.configure(text="✅ Concluído! Arquivos salvos.", text_color="green")
+            self.folder_button.pack(pady=10)
+        else:
+            self.status_label.configure(text="❌ Erve um erro no processamento.", text_color="red")
 
     def open_output_folder(self):
-        """Abre a pasta de saída no Dolphin (KDE/Ubuntu Studio)"""
-        output_path = os.path.abspath(f"backend/output/{self.song_name}")
-        if os.path.exists(output_path):
-            # xdg-open é o comando padrão Linux para abrir pastas/arquivos
-            subprocess.run(["xdg-open", output_path])
-        else:
-            self.status_label.configure(text="Pasta não encontrada!", text_color="orange")
+        # Para o Demucs, a pasta costuma ser htdemucs/nome_da_musica
+        path = os.path.abspath(f"backend/output")
+        subprocess.run(["xdg-open", path])
 
 if __name__ == "__main__":
     app = VibeCodingApp()
