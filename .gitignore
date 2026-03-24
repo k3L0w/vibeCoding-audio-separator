@@ -3,6 +3,7 @@ venv/
 .env
 __pycache__/
 *.py[cod]
+venv_demucs/
 
 # --- Modelos de IA (PESADOS - NÃO SUBIR) ---
 # Ignora a pasta onde o Spleeter baixa os modelos pré-treinados
