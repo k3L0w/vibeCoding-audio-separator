@@ -67,3 +67,11 @@ pip install demucs librosa matplotlib numpy
 ```bash
 # Ambiente da Interface
 python3 app.py
+---
+
+## ⚖️ Licença e Créditos
+
+Desenvolvido por **Pereira** como um projeto de acessibilidade tecnológica para músicos.  
+Motor de IA baseado no projeto [Demucs](https://github.com/facebookresearch/demucs) da **Meta AI Research**.
+
+---
