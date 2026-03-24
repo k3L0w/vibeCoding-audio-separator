@@ -1,52 +1,63 @@
-# 🎸 VibeCoding: Audio Separation Engine
+# 🎸 VibeCoding: Audio Separation Engine (Demucs Edition)
 
 [![Python Version](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![OS](https://img.shields.io/badge/OS-Ubuntu%20Studio%2024.04-orange.svg)](https://ubuntustudio.org/)
-[![Engine](https://img.shields.io/badge/Engine-Spleeter-green.svg)](https://github.com/deezer/spleeter)
+[![Engine](https://img.shields.io/badge/Engine-Demucs-blueviolet.svg)](https://github.com/facebookresearch/demucs)
 
-Um motor de separação de áudio de alta performance capaz de isolar **Vocais** e **Acompanhamento Instrumental**, otimizado especificamente para rodar em hardware local legado com recursos limitados.
+O **VibeCoding** é um motor de separação de áudio de alta fidelidade projetado para isolar instrumentos com precisão profissional. Utilizando inteligência artificial de ponta, o sistema transforma arquivos estéreo em trilhas individuais (stems), sendo uma alternativa robusta e local para músicos e produtores.
 
 ---
 
-## 🚀 O Desafio de Engenharia
+## 🚀 O Desafio de Engenharia: IA em Hardware Legado
 
-Este projeto foi desenvolvido e testado em um **Dell Latitude E6430** (Hardware de 2012), provando que é possível executar modelos modernos de IA e Processamento de Sinais sem depender de infraestrutura em nuvem dispendiosa.
+O grande diferencial deste projeto é a sua otimização para hardware legado. Ele foi desenvolvido e validado em um **Dell Latitude E6430** (2012), provando que o processamento de sinais moderno é viável sem dependência de nuvem.
 
 ### 🛠️ Especificações do Host
 - **Processador:** Intel® Core™ i5-3320M @ 2.60GHz
 - **Memória:** 16GB DDR3 RAM
 - **S.O:** Ubuntu Studio 24.04 (Kernel Low-Latency)
-- **Ambiente:** KDE Plasma / VS Code com Extensão Cline
+- **Ambiente:** KDE Plasma / VS Code com Integração Dolphin
 
 ---
 
-## 🧠 Otimizações Implementadas
+## 🧠 Otimizações e Arquitetura
 
-Para viabilizar o projeto no hardware disponível, foram aplicadas as seguintes estratégias:
+Para viabilizar a execução do **Demucs** (motor de alta complexidade matemática) em um i5 de 3ª geração, implementamos as seguintes estratégias:
 
-1. **Python 3.10 Runtime Downgrade**: Migração estratégica do Python 3.12 (padrão do sistema) para o 3.10. Isso resolveu a incompatibilidade crítica do `pkgutil.ImpImporter` (removido no 3.12), permitindo a execução estável do TensorFlow e Spleeter.
-2. **AI-Assisted Development (Zero-Footprint)**: Utilização do modelo **TinyLlama** via Ollama. Essa escolha manteve o consumo de RAM da IA abaixo de **1GB**, liberando os outros **15GB** para o carregamento dos modelos de rede neural do Spleeter.
-3. **Memory Management**: Configuração de timeouts de API para **600s**, permitindo que a CPU processe o "Cold Start" dos modelos sem interrupções de conexão no ambiente de desenvolvimento.
+1. **Dual-Venv Architecture**: Separação de ambientes virtuais (`venv` e `venv_demucs`) para evitar conflitos de dependências entre a interface gráfica e o motor PyTorch.
+2. **CPU-Bound Optimization**: Configuração forçada para modo CPU (`CUDA_VISIBLE_DEVICES=-1`), otimizando o uso dos 4 threads do processador.
+3. **UI Assíncrona com QProcess**: A interface neon monitora o progresso em tempo real sem bloquear o sistema operacional, utilizando expressões regulares para capturar o status da IA.
 
 ---
 
-## 📊 Fluxo de Processamento
+## 📈 Performance e Resultados
 
-O sistema segue uma pipeline de três etapas:
+O sistema demonstra estabilidade total em ciclos longos de processamento.
 
-1. **Injestão**: Recebe arquivos MP3 na pasta `backend/input`.
-2. **Separação**: O `processor.py` utiliza o modelo `2stems` para gerar arquivos `.wav` isolados.
-3. **Validação**: O `visualizer.py` gera espectrogramas de frequência para comprovar a pureza da separação.
+* **Capacidade**: Isolação de 4 trilhas principais: **Vocais**, **Bateria**, **Baixo** e **Outros** (Guitarras/Teclados).
+* **Tempo de Processamento**: Aproximadamente 31 minutos para uma faixa completa em modo de alta fidelidade.
+* **Eficiência Térmica e de RAM**: Consumo estabilizado em **8.8GB de RAM**, mantendo o sistema Ubuntu Studio fluido para multitarefa.
 
-### Exemplo de Saída (Espectrograma)
-[Aqui você pode inserir o link para a imagem do espectrograma que geramos]
+---
+
+## 📊 Fluxo de Trabalho
+
+1. **Injestão**: Seleção de arquivos via interface CustomTkinter.
+2. **Processamento**: Execução do modelo `htdemucs` via ambiente virtual dedicado.
+3. **Análise**: Geração de espectrogramas de frequência via `visualizer.py` para conferência de pureza sonora.
 
 ---
 
 ## ⚙️ Como Executar
 
-1. **Preparar o Ambiente**:
-   ```bash
-   python3.10 -m venv venv
-   source venv/bin/activate
-   pip install spleeter pydub matplotlib librosa
+### 1. Preparar os Ambientes
+```bash
+# Ambiente da Interface
+python3 -m venv venv
+source venv/bin/activate
+pip install customtkinter
+
+# Ambiente do Motor (Demucs)
+python3 -m venv venv_demucs
+source venv_demucs/bin/activate
+pip install demucs librosa matplotlib numpy
