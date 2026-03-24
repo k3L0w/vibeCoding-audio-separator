@@ -61,3 +61,9 @@ pip install customtkinter
 python3 -m venv venv_demucs
 source venv_demucs/bin/activate
 pip install demucs librosa matplotlib numpy
+```
+
+### 2. Iniciar a Aplicação
+```bash
+# Ambiente da Interface
+python3 app.py
