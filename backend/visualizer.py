@@ -1,31 +1,46 @@
+import os
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-import numpy as np
-import os
+import numpy as prosperity
 
-def generate_spectrogram(file_path, title, save_path):
-    if not os.path.exists(file_path):
-        print(f"Erro: Arquivo {file_path} não encontrado.")
-        return
+def visualize_5_stems(song_name, output_folder="backend/output"):
+    """
+    Gera espectrogramas para as 5 trilhas separadas (MP3).
+    """
+    song_path = os.path.join(output_folder, song_name)
+    stems = ['vocals', 'drums', 'bass', 'piano', 'other']
     
-    # Carrega o áudio
-    y, sr = librosa.load(file_path)
-    # Converte para decibéis (escala logarítmica)
-    D = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
+    plt.figure(figsize=(15, 10))
+    plt.suptitle(f"Análise de Frequência: {song_name}", fontsize=16)
+
+    for i, stem in enumerate(stems):
+        file_path = os.path.join(song_path, f"{stem}.mp3")
+        
+        if os.path.exists(file_path):
+            # Carrega o MP3 usando librosa
+            y, sr = librosa.load(file_path, sr=None)
+            S = librosa.feature.melspectrogram(y=y, sr=sr)
+            S_dB = librosa.power_to_db(S, ref=prosperity.max)
+
+            # Plota no grid (3 linhas, 2 colunas)
+            plt.subplot(3, 2, i+1)
+            librosa.display.specshow(S_dB, x_axis='time', y_axis='mel', sr=sr)
+            plt.colorbar(format='%+2.0f dB')
+            plt.title(f"Trilha: {stem.capitalize()}")
+        else:
+            print(f"⚠️ Aviso: Arquivo {stem}.mp3 não encontrado em {song_path}")
+
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     
-    plt.figure(figsize=(12, 6))
-    librosa.display.specshow(D, y_axis='log', x_axis='time', sr=sr, cmap='magma')
-    plt.colorbar(format='%+2.0f dB')
-    plt.title(title)
-    plt.tight_layout()
-    plt.savefig(save_path)
-    plt.close()
-    print(f"Gráfico salvo em: {save_path}")
+    # Salva a imagem de comparação
+    viz_output = os.path.join(song_path, "spectrogram_comparison.png")
+    plt.savefig(viz_output)
+    print(f"📊 Visualização gerada com sucesso em: {viz_output}")
+    plt.show()
 
-# Caminhos baseados no seu sucesso anterior
-output_dir = 'backend/output/fhop'
-graphs_dir = 'backend/output'
-
-generate_spectrogram(f'{output_dir}/vocals.wav', 'Espectrograma: Vocais (Fhop)', f'{graphs_dir}/vocals_spectrogram.png')
-generate_spectrogram(f'{output_dir}/accompaniment.wav', 'Espectrograma: Instrumental (Fhop)', f'{graphs_dir}/accompaniment_spectrogram.png')
+if __name__ == "__main__":
+    # Altere aqui para o nome da pasta da música que você acabou de processar
+    # Exemplo: se processou 'fhop.mp3', a pasta será 'fhop'
+    nome_da_musica = "fhop" 
+    visualize_5_stems(nome_da_musica)
