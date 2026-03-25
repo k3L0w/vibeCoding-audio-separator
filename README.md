@@ -22,11 +22,12 @@ O grande diferencial deste projeto é a sua otimização para hardware legado. E
 
 ## 🧠 Otimizações e Arquitetura
 
-Para viabilizar a execução do **Demucs** (motor de alta complexidade matemática) em um i5 de 3ª geração, implementamos as seguintes estratégias:
+Para viabilizar a execução do **Demucs** em um i5 de 3ª geração, implementamos as seguintes estratégias:
 
 1. **Dual-Venv Architecture**: Separação de ambientes virtuais (`venv` e `venv_demucs`) para evitar conflitos de dependências entre a interface gráfica e o motor PyTorch.
-2. **CPU-Bound Optimization**: Configuração forçada para modo CPU (`CUDA_VISIBLE_DEVICES=-1`), otimizando o uso dos 4 threads do processador.
-3. **UI Assíncrona com QProcess**: A interface neon monitora o progresso em tempo real sem bloquear o sistema operacional, utilizando expressões regulares para capturar o status da IA.
+2. **CPU-Bound Optimization**: Configuração forçada para modo CPU, otimizando o uso dos 4 threads do processador.
+3. **UI Assíncrona com QProcess**: A interface monitora o progresso em tempo real sem bloquear o sistema operacional.
+4. **Integrated Stem Player**: Implementação de mixer via `pygame` para audição imediata das trilhas isoladas.
 
 ---
 
@@ -34,9 +35,9 @@ Para viabilizar a execução do **Demucs** (motor de alta complexidade matemáti
 
 O sistema demonstra estabilidade total em ciclos longos de processamento.
 
-* **Capacidade**: Isolação de 4 trilhas principais: **Vocais**, **Bateria**, **Baixo** e **Outros** (Guitarras/Teclados).
+* **Capacidade**: Isolação de 4 trilhas principais: **Vocais**, **Bateria**, **Baixo** e **Outros**.
 * **Tempo de Processamento**: Aproximadamente 31 minutos para uma faixa completa em modo de alta fidelidade.
-* **Eficiência Térmica e de RAM**: Consumo estabilizado em **8.8GB de RAM**, mantendo o sistema Ubuntu Studio fluido para multitarefa.
+* **Eficiência de RAM**: Consumo estabilizado em **8.8GB**, mantendo o sistema fluido para multitarefa.
 
 ---
 
@@ -44,7 +45,8 @@ O sistema demonstra estabilidade total em ciclos longos de processamento.
 
 1. **Injestão**: Seleção de arquivos via interface CustomTkinter.
 2. **Processamento**: Execução do modelo `htdemucs` via ambiente virtual dedicado.
-3. **Análise**: Geração de espectrogramas de frequência via `visualizer.py` para conferência de pureza sonora.
+3. **Estudo (Solo Mode)**: Player integrado para audição individual de cada instrumento (Vocais, Bateria, Baixo e Outros).
+4. **Análise**: Geração de espectrogramas de frequência via `visualizer.py` para conferência de pureza sonora.
 
 ---
 
@@ -52,26 +54,31 @@ O sistema demonstra estabilidade total em ciclos longos de processamento.
 
 ### 1. Preparar os Ambientes
 ```bash
-# Ambiente da Interface
+# Ambiente da Interface e Player
 python3 -m venv venv
 source venv/bin/activate
-pip install customtkinter
+pip install customtkinter pygame
 
 # Ambiente do Motor (Demucs)
 python3 -m venv venv_demucs
 source venv_demucs/bin/activate
 pip install demucs librosa matplotlib numpy
 ```
-
 ### 2. Iniciar a Aplicação
 ```bash
-# Ambiente da Interface
+source venv/bin/activate
 python3 app.py
+```
+
 ---
 
 ## ⚖️ Licença e Créditos
 
-Desenvolvido por **Pereira** como um projeto de acessibilidade tecnológica para músicos.  
-Motor de IA baseado no projeto [Demucs](https://github.com/facebookresearch/demucs) da **Meta AI Research**.
+Desenvolvido por Pereira como um projeto de acessibilidade tecnológica para músicos.
+
+Motor de IA baseado no projeto Demucs da Meta AI Research.
+```bash
+**Com o README atualizado e o código pronto, quer que eu te ajude com os comandos finais para dar o `git push` agora?** \o/
+```
 
 ---
