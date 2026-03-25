@@ -8,50 +8,31 @@ O **RiffForge** é um estúdio de isolamento de áudio de 6 canais projetado par
 
 ---
 
-## 🚀 Engenharia de Precisão em Hardware Real
+## 🚀 O Desafio de Engenharia: IA em Hardware Legado
 
-<<<<<<< HEAD
-O **RiffForge** foi forjado e validado em um **Dell Latitude E6430**, otimizando o processamento de IA para ambientes locais sem latência de nuvem.
-
-### 🛠️ Especificações da Forja
-- **Host:** Dell Latitude E6430 (Intel® Core™ i5-3320M)
-- **RAM:** 16GB DDR3 (Otimizada para 8.8GB de uso estável)
-=======
 O grande diferencial do **RiffForge** é a sua otimização para hardware legado. Ele foi desenvolvido e validado em um **Dell Latitude E6430** (2012), provando que o processamento de sinais moderno é viável localmente e sem dependência de nuvem.
 
 ### 🛠️ Especificações da Forja
 - **Processador:** Intel® Core™ i5-3320M @ 2.60GHz
 - **Memória:** 16GB DDR3 RAM
->>>>>>> 7683c3e (feat: official rebrand to RiffForge & implement 6-channel synchronized mixer)
 - **S.O:** Ubuntu Studio 24.04 (Kernel Low-Latency)
+- **Ambiente:** KDE Plasma / VS Code com Integração Dolphin
 
 ---
 
-## 🧠 Arquitetura do Sistema
+## 🧠 Otimizações e Arquitetura
 
-<<<<<<< HEAD
-1. **6-Stem Neural Isolation**: Separação dedicada de Guitarra e Teclado.
-2. **Synchronized Mixer Engine**: Motor Pygame que dispara todas as trilhas com precisão de milissegundos.
-3. **Real-time Fader Control**: Mixagem interativa para criação de Backing Tracks personalizadas.
-4. **Spectral Analysis**: Visualização de frequências para conferência de pureza sonora.
-=======
 Para viabilizar a execução do motor **Demucs** de 6 stems em um hardware i5 de 3ª geração, implementamos as seguintes estratégias:
 
 1. **Dual-Venv Architecture**: Separação de ambientes virtuais (`venv` e `venv_demucs`) para evitar conflitos de dependências entre a interface gráfica e o motor PyTorch.
 2. **CPU-Bound Optimization**: Configuração otimizada para os 4 threads do processador, garantindo estabilidade térmica.
 3. **Synchronized Mixer Engine**: Motor baseado em `pygame.mixer` que dispara as 6 trilhas simultaneamente com precisão de milissegundos.
 4. **Real-time Fader Control**: Interface interativa que permite ajustar volumes individuais para criação de backing tracks personalizadas.
->>>>>>> 7683c3e (feat: official rebrand to RiffForge & implement 6-channel synchronized mixer)
 
 ---
 
-## ⚙️ Como Operar o RiffForge
+## 📈 Performance e Resultados
 
-<<<<<<< HEAD
-### 1. Preparar a Forja (Ambientes)
-```bash
-# Ambiente de Interface e Mixer
-=======
 O sistema demonstra estabilidade total em ciclos longos de processamento neural.
 
 * **Capacidade**: Isolação de 6 trilhas principais: **Vocais**, **Bateria**, **Baixo**, **Guitarra**, **Piano** e **Outros**.
@@ -74,29 +55,15 @@ O sistema demonstra estabilidade total em ciclos longos de processamento neural.
 ### 1. Preparar os Ambientes
 ```bash
 # Ambiente da Interface e Mixer
->>>>>>> 7683c3e (feat: official rebrand to RiffForge & implement 6-channel synchronized mixer)
 python3 -m venv venv
 source venv/bin/activate
 pip install customtkinter pygame
 
-# Ambiente Neural (Demucs)
+# Ambiente do Motor (Demucs)
 python3 -m venv venv_demucs
 source venv_demucs/bin/activate
 pip install demucs librosa matplotlib numpy
 ```
-<<<<<<< HEAD
-
-### 2. Iniciar a Sessão
-```bash
-source venv/bin/activate
-python3 app.py
-```
-
-## ⚖️ Licença e Créditos
-
-Desenvolvido por **Pereira**.
-O **RiffForge** utiliza o motor de IA **Demucs** da Meta AI Research.
-=======
 ### 2. Iniciar a Aplicação
 ```bash
 source venv/bin/activate
