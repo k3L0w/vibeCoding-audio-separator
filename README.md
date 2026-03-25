@@ -1,84 +1,57 @@
-# 🎸 VibeCoding: Audio Separation Engine (Demucs Edition)
+# 🎸 RiffForge: The Ultra-Fidelity Audio Deconstruction Engine
 
 [![Python Version](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![OS](https://img.shields.io/badge/OS-Ubuntu%20Studio%2024.04-orange.svg)](https://ubuntustudio.org/)
-[![Engine](https://img.shields.io/badge/Engine-Demucs-blueviolet.svg)](https://github.com/facebookresearch/demucs)
+[![Engine](https://img.shields.io/badge/Engine-Demucs_6s-yellow.svg)](https://github.com/facebookresearch/demucs)
 
-O **vibeCoding-audio-separator** é um motor de separação de áudio de alta fidelidade projetado para isolar instrumentos com precisão profissional. Utilizando inteligência artificial de ponta, o sistema transforma arquivos estéreo em trilhas individuais (stems), sendo uma alternativa robusta e local para músicos e produtores.
+O **RiffForge** é um estúdio de isolamento de áudio de 6 canais projetado para músicos que exigem precisão absoluta. Diferente de separadores comuns, o RiffForge utiliza o modelo `htdemucs_6s` para forjar trilhas independentes de **Guitarra** e **Piano**, além de Voz, Baixo e Bateria.
 
 ---
 
-## 🚀 O Desafio de Engenharia: IA em Hardware Legado
+## 🚀 Engenharia de Precisão em Hardware Real
 
-O grande diferencial deste projeto é a sua otimização para hardware legado. Ele foi desenvolvido e validado em um **Dell Latitude E6430** (2012), provando que o processamento de sinais moderno é viável sem dependência de nuvem.
+O **RiffForge** foi forjado e validado em um **Dell Latitude E6430**, otimizando o processamento de IA para ambientes locais sem latência de nuvem.
 
-### 🛠️ Especificações do Host
-- **Processador:** Intel® Core™ i5-3320M @ 2.60GHz
-- **Memória:** 16GB DDR3 RAM
+### 🛠️ Especificações da Forja
+- **Host:** Dell Latitude E6430 (Intel® Core™ i5-3320M)
+- **RAM:** 16GB DDR3 (Otimizada para 8.8GB de uso estável)
 - **S.O:** Ubuntu Studio 24.04 (Kernel Low-Latency)
-- **Ambiente:** KDE Plasma / VS Code com Integração Dolphin
 
 ---
 
-## 🧠 Otimizações e Arquitetura
+## 🧠 Arquitetura do Sistema
 
-Para viabilizar a execução do **Demucs** em um i5 de 3ª geração, implementamos as seguintes estratégias:
-
-1. **Dual-Venv Architecture**: Separação de ambientes virtuais (`venv` e `venv_demucs`) para evitar conflitos de dependências entre a interface gráfica e o motor PyTorch.
-2. **CPU-Bound Optimization**: Configuração forçada para modo CPU, otimizando o uso dos 4 threads do processador.
-3. **UI Assíncrona com QProcess**: A interface monitora o progresso em tempo real sem bloquear o sistema operacional.
-4. **Integrated Stem Player**: Implementação de mixer via `pygame` para audição imediata das trilhas isoladas.
+1. **6-Stem Neural Isolation**: Separação dedicada de Guitarra e Teclado.
+2. **Synchronized Mixer Engine**: Motor Pygame que dispara todas as trilhas com precisão de milissegundos.
+3. **Real-time Fader Control**: Mixagem interativa para criação de Backing Tracks personalizadas.
+4. **Spectral Analysis**: Visualização de frequências para conferência de pureza sonora.
 
 ---
 
-## 📈 Performance e Resultados
+## ⚙️ Como Operar o RiffForge
 
-O sistema demonstra estabilidade total em ciclos longos de processamento.
-
-* **Capacidade**: Isolação de 4 trilhas principais: **Vocais**, **Bateria**, **Baixo** e **Outros**.
-* **Tempo de Processamento**: Aproximadamente 31 minutos para uma faixa completa em modo de alta fidelidade.
-* **Eficiência de RAM**: Consumo estabilizado em **8.8GB**, mantendo o sistema fluido para multitarefa.
-
----
-
-## 📊 Fluxo de Trabalho
-
-1. **Injestão**: Seleção de arquivos via interface CustomTkinter.
-2. **Processamento**: Execução do modelo `htdemucs` via ambiente virtual dedicado.
-3. **Estudo (Solo Mode)**: Player integrado para audição individual de cada instrumento (Vocais, Bateria, Baixo e Outros).
-4. **Análise**: Geração de espectrogramas de frequência via `visualizer.py` para conferência de pureza sonora.
-
----
-
-## ⚙️ Como Executar
-
-### 1. Preparar os Ambientes
+### 1. Preparar a Forja (Ambientes)
 ```bash
-# Ambiente da Interface e Player
+# Ambiente de Interface e Mixer
 python3 -m venv venv
 source venv/bin/activate
 pip install customtkinter pygame
 
-# Ambiente do Motor (Demucs)
+# Ambiente Neural (Demucs)
 python3 -m venv venv_demucs
 source venv_demucs/bin/activate
 pip install demucs librosa matplotlib numpy
 ```
-### 2. Iniciar a Aplicação
+
+### 2. Iniciar a Sessão
 ```bash
 source venv/bin/activate
 python3 app.py
 ```
 
----
-
 ## ⚖️ Licença e Créditos
 
-Desenvolvido por Pereira como um projeto de acessibilidade tecnológica para músicos.
+Desenvolvido por Pereira.
 
-Motor de IA baseado no projeto Demucs da Meta AI Research.
-```bash
-**Com o README atualizado e o código pronto, quer que eu te ajude com os comandos finais para dar o `git push` agora?** \o/
-```
-
+O RiffForge utiliza o motor de IA Demucs da Meta AI Research.
 ---
