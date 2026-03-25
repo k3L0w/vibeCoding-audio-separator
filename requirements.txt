@@ -1,0 +1,12 @@
+# --- Interface e Motor de Áudio ---
+customtkinter
+pygame
+
+# --- Motor de IA (Demucs) e Processamento ---
+demucs
+librosa
+matplotlib
+numpy
+torch
+torchvision
+torchaudio

@@ -42,15 +42,11 @@ O **RiffForge** foi desenhado para cenários reais de estudo e produção musica
 
 ### 1. Preparar os Ambientes
 ```bash
-# Interface e Mixer
+### 1. Preparar o Ambiente
+```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install customtkinter pygame
-
-# Motor Neural (Demucs)
-python3 -m venv venv_demucs
-source venv_demucs/bin/activate
-pip install demucs librosa matplotlib numpy
+pip install -r requirements.txt
 
 ### 2. Iniciar a Aplicação
 ```bash
