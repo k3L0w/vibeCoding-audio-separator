@@ -1,59 +1,110 @@
-# 🎸 RiffForge: The Ultra-Fidelity Audio Deconstruction Engine
+# 🎸 RiffForge v1.3 - Professional Audio Deconstruction Engine
 
-[![Python Version](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
-[![OS](https://img.shields.io/badge/OS-Ubuntu%20Studio%2024.04-orange.svg)](https://ubuntustudio.org/)
-[![Engine](https://img.shields.io/badge/Engine-Demucs_6s-yellow.svg)](https://github.com/facebookresearch/demucs)
+<p align="center">
+  <strong>O Engine de Decomposição de Áudio de Ultra-Fidelidade</strong><br>
+  Separação avançada em 6 canais (Stems) otimizada para estudo musical, transcrição e performance.
+</p>
 
-O **RiffForge** é um motor de separação de áudio de alta fidelidade de 6 canais, projetado para isolar instrumentos com precisão profissional. Utilizando o modelo `htdemucs_6s`, o sistema transforma arquivos estéreo em trilhas individuais, permitindo o isolamento dedicado de **Guitarra** e **Teclado**.
-
----
-
-## 🚀 O Desafio de Engenharia: IA em Hardware Legado
-
-Desenvolvido e validado num **Dell Latitude E6430** (2012), provando que o processamento de sinais moderno é viável localmente.
-
-### 🛠️ Especificações do Host
-- **Processador:** Intel® Core™ i5-3320M @ 2.60GHz
-- **Memória:** 16GB DDR3 RAM
-- **S.O:** Ubuntu Studio 24.04 (Kernel Low-Latency)
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue">
+  <img alt="Platform" src="https://img.shields.io/badge/Platform-Linux%20%28Ubuntu%20Studio%2024.04%29-informational">
+  <img alt="Audio Engine" src="https://img.shields.io/badge/Engine-Demucs-success">
+  <img alt="Model" src="https://img.shields.io/badge/Model-htdemucs__6s-orange">
+  <img alt="UI Framework" src="https://img.shields.io/badge/UI-CustomTkinter-blueviolet">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Stable--v1.3-green">
+</p>
 
 ---
 
-## 📈 Performance e Stems
+## 📖 Sobre o Projeto
 
-* **Capacidade**: Isolação de 6 trilhas: **Voz**, **Bateria**, **Baixo**, **Guitarra**, **Teclado** e **Outros**.
-* **Mixer Interativo**: Inclui faders individuais e um **Master Gain** global para controlo em tempo real.
-* **Eficiência**: Consumo estabilizado em **8.8GB de RAM**.
+O **RiffForge** é uma estação de trabalho especializada na extração de *stems* (trilhas isoladas) com alta precisão. Utilizando o estado da arte em IA (modelo `htdemucs_6s`), o software decompõe arquivos de áudio complexos em 6 componentes individuais, permitindo que músicos foquem no que realmente importa: o aprendizado e a prática técnica.
 
 ---
 
-## 🎸 Exemplos de Uso Prático
+## ✨ Funcionalidades Principais
 
-O **RiffForge** foi desenhado para cenários reais de estudo e produção musical:
+### 1. Separação Granular (6-Stems)
+Ao contrário de separadores comuns de 4 canais, o RiffForge isola **Guitarras** e **Teclados** em canais independentes, essencial para guitarristas e pianistas.
+*   **Vocais, Bateria, Baixo, Guitarra, Teclado e "Outros".**
 
-* **Criação de Backing Tracks**: Mute a trilha de **Guitarra** ou **Baixo** para praticar o seu instrumento sobre a gravação original, mantendo a fidelidade total dos outros músicos.
-* **Estudo de Transcrição**: Isole apenas o **Teclado** ou a **Voz** para captar nuances de arranjo que seriam impossíveis de ouvir na mixagem estéreo comum.
-* **Controle de Ensaio com Master Gain**: Use o **Master Fader** para ajustar rapidamente o volume do projeto ao nível do seu amplificador externo, sem precisar reequilibrar cada instrumento individualmente.
-* **Análise de Mixagem**: Compare a pureza das frequências isoladas utilizando o visualizador integrado para entender a engenharia por trás das suas músicas favoritas.
+### 2. Smart-Cache System (Forja Instantânea)
+O sistema detecta automaticamente se uma música já foi processada anteriormente no disco. Se os arquivos existirem, o mixer é carregado em milissegundos, ignorando a etapa de processamento pesado da IA.
+
+### 3. Mixer Profissional com Feedback Visual
+*   **VU Meters Reais:** Visualização dinâmica dos níveis de saída de cada canal.
+*   **Controles Solo/Mute:** Isolamento de faixas com latência zero via Pygame Mixer.
+*   **Master Gain:** Controle global de volume para ajuste fino durante a prática.
+
+### 4. Arquitetura Multi-threaded
+O processamento da IA ocorre em background, garantindo que a interface gráfica (GUI) permaneça fluida e responsiva durante a extração.
+
+---
+
+## 🛠️ Desafio de Engenharia: Performance em Hardware Legado
+
+Um dos pilares do RiffForge v1.3 é a eficiência. O software foi otimizado para rodar em estações de áudio com hardware de entrada ou anterior à geração atual de processadores de IA.
+
+### Ambiente de Referência (Stress Test)
+
+| Componente | Especificação |
+|------------|---------------|
+| Host | Dell Latitude E6430 |
+| CPU | Intel Core i5-3320M |
+| RAM | 16 GB DDR3 |
+| Sistema Operacional | Ubuntu Studio 24.04 |
+| Kernel | Low-Latency |
+
+### Estratégias de Otimização
+*   **Priorização de Processo (`nice`):** O motor Demucs é executado com prioridade ajustada (`nice -n 10`) para garantir que o kernel Linux dê prioridade às tarefas de interface e áudio em tempo real, evitando congelamentos do sistema.
+*   **Gerenciamento de Memória:** Buffer de áudio do Pygame configurado para `512` para equilibrar latência e consumo de CPU.
+*   **Venv Dedicado:** Isolamento completo de dependências para evitar conflitos com drivers de áudio do sistema.
 
 ---
 
 ## ⚙️ Como Executar
 
-### 1. Preparar os Ambientes
-```bash
-### 1. Preparar o Ambiente
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+### Pré-requisitos
+*   Python 3.10 ou superior.
+*   FFmpeg instalado no sistema (`sudo apt install ffmpeg`).
 
-### 2. Iniciar a Aplicação
+### Instalação
+
+1.  **Configurar o ambiente:**
+    ```bash
+    # Dê permissão e execute o script de setup
+    chmod +x setup_env.sh
+    ./setup_env.sh
+    ```
+
+2.  **Ativar o Ambiente Virtual:**
+    ```bash
+    source venv/bin/activate
+    ```
+
+3.  **Instalar dependências (Manual):**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### Inicialização
 ```bash
-source venv/bin/activate
 python3 app.py
 
-## ⚖️ Licença e Créditos
-Desenvolvido por **Pereira** como um projeto de acessibilidade tecnológica para músicos.
+---
 
-Motor de IA baseado no projeto [Demucs](https://github.com/facebookresearch/demucs) da **Meta AI Research**.
+## ⚖️ Licença e Créditos
+
+### **Desenvolvedor Principal**
+* **Antonio Pereira** (@pereira-Latitude-E6430): Concepção, arquitetura de interface em CustomTkinter e integração de áudio multi-canal no Ubuntu Studio.
+
+### **Motores de Inteligência Artificial**
+* **Demucs (Meta AI Research):** O RiffForge utiliza o modelo de separação de fontes `htdemucs_6s`.
+* **Licença do Motor:** Licenciado sob a **MIT License**. Copyright (c) Facebook, Inc. e seus afiliados.
+
+### **Bibliotecas e Tecnologias**
+* **CustomTkinter:** Framework para a interface visual moderna.
+* **Pygame Mixer:** Motor para reprodução sincronizada e gerenciamento de buffers.
+* **Spleeter (Deezer):** Utilizado como dependência de backend para processamento de stems.
+
+---

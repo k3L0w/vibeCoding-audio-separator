@@ -1,36 +1,35 @@
 #!/bin/bash
 
-echo "🚀 Iniciando a configuração do VibeCoding Audio Engine..."
+# --- RiffForge Setup Script para Ubuntu Studio ---
 
-# 1. Verificar se o Python 3.10 está instalado
-if ! command -v python3.10 &> /dev/null
-then
-    echo "❌ Python 3.10 não encontrado. Por favor, instale-o com: sudo apt install python3.10 python3.10-venv"
-    exit
-fi
+echo "🎸 Iniciando a forja do ambiente RiffForge..."
 
-# 2. Criar ambiente virtual se não existir
-if [ ! -d "venv" ]; then
-    echo "📦 Criando ambiente virtual (venv) com Python 3.10..."
-    python3.10 -m venv venv
-else
-    echo "✅ Ambiente virtual já existe."
-fi
+# 1. Atualizar pacotes do sistema (essencial para o Pygame e FFmpeg)
+echo "📦 Verificando dependências de sistema (FFmpeg e Python Dev)..."
+sudo apt update && sudo apt install -y ffmpeg python3-dev python3-venv
 
-# 3. Ativar venv e instalar dependências
-echo "🛠️ Instalando dependências (Spleeter, Librosa, Pydub, Matplotlib)..."
+# 2. Criar e configurar o ambiente principal (Interface e Mixer)
+echo "🐍 Criando venv principal para a Interface..."
+python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install spleeter pydub librosa matplotlib setuptools
+pip install -r requirements.txt
+deactivate
 
-# 4. Criar estrutura de pastas
+# 3. Criar e configurar o ambiente de IA (Demucs)
+echo "🤖 Criando venv_demucs para o motor de separação..."
+python3 -m venv venv_demucs
+source venv_demucs/bin/activate
+pip install --upgrade pip
+pip install demucs
+deactivate
+
+# 4. Criar estrutura de pastas (caso não existam)
 echo "📂 Organizando estrutura de diretórios..."
 mkdir -p backend/input
 mkdir -p backend/output
-
-# 5. Criar arquivos .gitkeep para manter as pastas no Git (vazias)
 touch backend/input/.gitkeep
 touch backend/output/.gitkeep
 
-echo "✨ Tudo pronto! Para começar, use: source venv/bin/activate"
-echo "🎵 Depois, coloque seu MP3 em backend/input/ e rode: python3 backend/processor.py"
+echo "✨ Configuração concluída com sucesso, Pereira!"
+echo "🚀 Para iniciar o app: source venv/bin/activate && python app.py"
