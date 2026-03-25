@@ -74,6 +74,5 @@ python3 app.py
 ## ⚖️ Licença e Créditos
 
 Desenvolvido por **Pereira** como um projeto de acessibilidade tecnológica para músicos.
->>>>>>> 7683c3e (feat: official rebrand to RiffForge & implement 6-channel synchronized mixer)
 
 Motor de IA baseado no projeto Demucs da **Meta AI Research**.
