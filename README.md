@@ -51,7 +51,7 @@ python3 app.py
 
 ## ⚖️ Licença e Créditos
 
-Desenvolvido por Pereira.
+Desenvolvido por **Pereira**.
+O **RiffForge** utiliza o motor de IA **Demucs** da Meta AI Research.
 
-O RiffForge utiliza o motor de IA Demucs da Meta AI Research.
 ---
