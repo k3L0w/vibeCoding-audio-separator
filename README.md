@@ -88,10 +88,9 @@ Um dos pilares do RiffForge v1.3 é a eficiência. O software foi otimizado para
     ```
 
 ### Inicialização
-  ```bash
-  python3 app.py
-  ```
----
+    ```bash
+    python3 app.py
+    ```
 
 ## ⚖️ Licença e Créditos
 
