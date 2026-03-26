@@ -14,7 +14,7 @@ import pygame  # Motor de áudio de baixa latência para tocar os 6 canais
 class RiffForgeApp(ctk.CTk):
     def __init__(self):
         super().__init__()  # Inicializa a janela principal do CustomTkinter
-        
+
         self.title("RiffForge: Professional 6-Channel Mixer")  # Define o título da aplicação
         self.geometry("750x1000")  # Define o tamanho da janela
         self.configure(fg_color="#0f0f13")  # Define a cor de fundo (Dark Theme)
@@ -22,11 +22,11 @@ class RiffForgeApp(ctk.CTk):
         # Inicializa o mixer do Pygame otimizado para hardware Latitude
         pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
         pygame.mixer.set_num_channels(12)  # Reserva canais extras para evitar cortes de áudio
-        
+
         self.master_gain = 1.0  # Multiplicador global de volume
         self.solo_track = None  # Armazena qual trilha está isolada pelo botão Solo
         self.muted_tracks = set()  # Conjunto que armazena trilhas silenciadas
-        
+
         # Configuração visual e técnica dos 6 instrumentos (stems)
         self.stem_configs = {
             "vocals": {"name": "🎤 VOZ", "color": "#ff00ff"},
@@ -36,7 +36,7 @@ class RiffForgeApp(ctk.CTk):
             "piano":  {"name": "🎹 TECLADO", "color": "#00ffff"},
             "other":  {"name": "🎼 OUTROS", "color": "#7000ff"}
         }
-        
+
         # Cria dicionários para gerenciar os objetos de áudio e elementos da UI
         self.channels = {stem: pygame.mixer.Channel(i) for i, stem in enumerate(self.stem_configs.keys())}
         self.sounds = {}  # Armazena os objetos Sound carregados
@@ -48,14 +48,14 @@ class RiffForgeApp(ctk.CTk):
         # --- CONSTRUÇÃO DA INTERFACE (UI) ---
         self.label = ctk.CTkLabel(self, text="RIFFFORGE", font=("Impact", 45, "italic"), text_color="#00f2ff")
         self.label.pack(pady=(20, 5)) # Título principal com estilo neon
-        
+
         # Seção do Master Gain (Controle Geral)
         self.master_strip = ctk.CTkFrame(self, fg_color="#1a1a2e", border_width=2, border_color="#00f2ff")
         self.master_strip.pack(pady=10, padx=20, fill="x")
         ctk.CTkLabel(self.master_strip, text="🎚️ MASTER GAIN", text_color="#00f2ff", font=("Arial", 14, "bold")).pack(side="left", padx=15)
-        
+
         # Slider Master (Usa lambda para evitar o erro de inicialização)
-        self.master_slider = ctk.CTkSlider(self.master_strip, from_=0, to=1, progress_color="#00f2ff", 
+        self.master_slider = ctk.CTkSlider(self.master_strip, from_=0, to=1, progress_color="#00f2ff",
                                           command=lambda v: self.update_master_volume(v))
         self.master_slider.set(1.0)
         self.master_slider.pack(side="left", fill="x", expand=True, padx=20)
@@ -70,19 +70,19 @@ class RiffForgeApp(ctk.CTk):
         self.status_label.pack(pady=5)
 
         # Botão para importar arquivos e iniciar a separação
-        self.select_button = ctk.CTkButton(self, text="IMPORTAR PARA FORJA (6-STEMS)", command=self.select_file, 
+        self.select_button = ctk.CTkButton(self, text="IMPORTAR PARA FORJA (6-STEMS)", command=self.select_file,
                                           fg_color="#7000ff", font=("Arial", 14, "bold"))
         self.select_button.pack(pady=10)
 
         # Frame principal do Mixer (Fica oculto até a música ser carregada)
         self.mixer_frame = ctk.CTkFrame(self, fg_color="#16161e", corner_radius=15)
-        
+
         # Controles principais de transporte (Play/Stop)
         self.master_btns = ctk.CTkFrame(self.mixer_frame, fg_color="transparent")
         self.master_btns.pack(pady=15, fill="x", padx=20)
-        ctk.CTkButton(self.master_btns, text="▶ PLAY ALL", width=140, fg_color="#00ffcc", text_color="black", 
+        ctk.CTkButton(self.master_btns, text="▶ PLAY ALL", width=140, fg_color="#00ffcc", text_color="black",
                    command=self.play_all).pack(side="left", padx=10)
-        ctk.CTkButton(self.master_btns, text="🛑 STOP", width=140, fg_color="#ff4b2b", 
+        ctk.CTkButton(self.master_btns, text="🛑 STOP", width=140, fg_color="#ff4b2b",
                    command=self.stop_all).pack(side="left", padx=10)
 
         # Área de rolagem para os canais individuais
@@ -100,8 +100,8 @@ class RiffForgeApp(ctk.CTk):
     def create_mixer_strip(self, stem, config):
         """Cria uma faixa de canal individual (Slider, VU, Solo, Mute)"""
         strip = ctk.CTkFrame(self.scroll_frame, fg_color="#1a1a2e")
-        strip.pack(fill="x", pady=8, padx=5) 
-        
+        strip.pack(fill="x", pady=8, padx=5)
+
         # VU Meter Vertical (Barra que reage ao som)
         vu = ctk.CTkProgressBar(strip, width=12, height=70, orientation="vertical", progress_color=config["color"], fg_color="#0f0f13")
         vu.set(0)
@@ -111,7 +111,7 @@ class RiffForgeApp(ctk.CTk):
         # Nome do Instrumento
         lbl = ctk.CTkLabel(strip, text=config["name"], text_color=config["color"], font=("Arial", 11, "bold"), width=90)
         lbl.pack(side="left")
-        
+
         # Slider de Volume Individual
         slider = ctk.CTkSlider(strip, from_=0, to=1, progress_color=config["color"], command=lambda v, s=stem: self.update_volume(s, v))
         slider.set(1.0)
@@ -138,10 +138,10 @@ class RiffForgeApp(ctk.CTk):
         if path:
             self.selected_path = path
             self.song_name = os.path.splitext(os.path.basename(path))[0] # Remove a extensão
-            
+
             # Verifica se os arquivos processados já existem no HD
             cache_path = os.path.abspath(os.path.join("backend/output/htdemucs_6s", self.song_name))
-            
+
             if os.path.exists(cache_path) and any(f.endswith('.mp3') for f in os.listdir(cache_path)):
                 # Carregamento instantâneo (Smart-Skip)
                 self.status_label.configure(text="⚡ Cache Detetado! Carregando Sessão...", text_color="#00f2ff")
@@ -161,7 +161,7 @@ class RiffForgeApp(ctk.CTk):
         """Executa o Demucs via terminal com prioridade 'nice' no Linux"""
         output_dir = os.path.abspath("backend/output")
         python_env = os.path.expanduser("~/Documents/vibeCoding/venv_demucs/bin/python3") # Caminho do venv
-        
+
         # Executa com prioridade 10 para não travar o Ubuntu Studio
         cmd = ["nice", "-n", "10", python_env, "-m", "demucs", "--mp3", "-n", "htdemucs_6s", "-o", output_dir, self.selected_path]
 
@@ -215,7 +215,7 @@ class RiffForgeApp(ctk.CTk):
                 self.solo_buttons[self.solo_track].configure(fg_color="#333", text_color="white")
             self.solo_track = stem
             self.solo_buttons[stem].configure(fg_color="#ffff00", text_color="black") # Botão fica amarelo em Solo
-        
+
         # Atualiza o volume de todos os canais para refletir a nova regra de Solo
         for s in self.stem_configs.keys():
             self.update_volume(s, self.volume_sliders[s].get())
